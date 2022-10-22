@@ -1,0 +1,7 @@
+{
+    "title": "How to listen to webhook in lambda with serverless",
+    "preamble": "This article will walk through two ways we can listen to a webhook using lambda and serverless framework.",
+    "publishDate": "2022-10-10",
+    "category": "software",
+    "tags": ["aws", "lambda", "go", "webhook", "serverless"]
+}

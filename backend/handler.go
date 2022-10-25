@@ -16,7 +16,7 @@ func HandleGet(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "index.html")
 }
 
-func HandleGetArticle(w http.ResponseWriter, r *http.Request) {
+func HandleGetBlogpost(w http.ResponseWriter, r *http.Request) {
 	blogpost := chi.URLParam(r, "blogpost")
 	markdown, err := RenderMarkdownFile("blogposts/" + blogpost + ".md")
 	if err != nil {
@@ -28,9 +28,19 @@ func HandleGetArticle(w http.ResponseWriter, r *http.Request) {
 	w.Write(markdown.Bytes())
 }
 
-func HandleGetArticleMetadata(w http.ResponseWriter, r *http.Request) {
+func HandleGetMetadata(w http.ResponseWriter, r *http.Request) {
 	blogpost := chi.URLParam(r, "blogpost")
 	metadata, err := GetMetadata("blogposts/" + blogpost + ".json")
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+		return
+	}
+	SendJSONResponse(w, metadata)
+}
+
+func HandleListMetadata(w http.ResponseWriter, r *http.Request) {
+	metadata, err := ListMetadata()
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(err.Error()))

@@ -38,6 +38,11 @@ func (d *Date) UnmarshalJSON(value []byte) error {
 	return nil
 }
 
+type BlogPost struct {
+	Content  string   `json:"content"`
+	Metadata Metadata `json:"metadata"`
+}
+
 type Metadata struct {
 	Title       string   `json:"title"`
 	Preamble    string   `json:"preamble"`

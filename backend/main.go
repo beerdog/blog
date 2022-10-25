@@ -22,9 +22,9 @@ func main() {
 		http.ServeFile(w, r, "./templates/index.html")
 	})
 
-	r.MethodFunc("get", "/api/blogposts/{blogpost}", HandleGetArticle)
-
-	r.MethodFunc("get", "/api/metadata/{blogpost}", HandleGetArticleMetadata)
+	r.MethodFunc("get", "/api/blogposts/{blogpost}", HandleGetBlogpost)
+	r.MethodFunc("get", "/api/metadata/{blogpost}", HandleGetMetadata)
+	r.MethodFunc("get", "/api/metadata", HandleListMetadata)
 
 	http.ListenAndServe(":3000", r)
 }

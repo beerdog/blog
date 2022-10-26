@@ -5,6 +5,9 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+
+	"blog.jonastrogen.se/server"
+	"blog.jonastrogen.se/services"
 )
 
 func main() {
@@ -22,9 +25,13 @@ func main() {
 		http.ServeFile(w, r, "./templates/index.html")
 	})
 
-	r.MethodFunc("get", "/api/blogposts/{blogpost}", HandleGetBlogpost)
-	r.MethodFunc("get", "/api/metadata/{blogpost}", HandleGetMetadata)
-	r.MethodFunc("get", "/api/metadata", HandleListMetadata)
+	blogpostService := services.BlogpostFileService{}
+
+	h := server.NewHandler(blogpostService)
+
+	r.MethodFunc("get", "/api/blogposts/{blogpost}", h.HandleGetBlogpost)
+	r.MethodFunc("get", "/api/metadata/{blogpost}", h.HandleGetMetadata)
+	r.MethodFunc("get", "/api/metadata", h.HandleListMetadata)
 
 	http.ListenAndServe(":3000", r)
 }

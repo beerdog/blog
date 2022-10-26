@@ -1,4 +1,4 @@
-module jonastrogen.se/blog/v2
+module blog.jonastrogen.se
 
 go 1.19
 

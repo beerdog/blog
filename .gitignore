@@ -2,3 +2,9 @@
 backend/main
 backend/tmp/
 backend/tmp/main
+backend/.serverless/blogBackend.zip
+backend/.serverless/cloudformation-template-create-stack.json
+backend/.serverless/serverless-state.json
+backend/.serverless/cloudformation-template-update-stack.json
+backend/bin/blogbackend/main
+backend/main

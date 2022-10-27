@@ -1,0 +1,49 @@
+service: blog
+
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  stackTags:
+    integration: blog
+  tags:
+    integration: blog
+  region: ${opt:region, 'eu-north-1'}
+  stage: ${opt:stage, 'dev'}
+  versionFunctions: false
+  # Set the retention for a CloudWatch LogGroup
+  logRetentionInDays: ${self:custom.logRetentionInDays.${self:provider.stage}}
+
+custom:
+  # 'prod' stage specific settings, used for function configuration below
+  dev:
+    appDomain: dev.jonastrogen.se
+    cdnCloudfrontEndpoint: https://TODO.cloudfront.net
+  prod:
+    appDomain: jonastrogen.se
+    cdnCloudfrontEndpoint: https://TODO.cloudfront.net
+    maximumRetryAttempts: 2
+  logRetentionInDays:
+    prod: 14
+    dev: 1
+
+package:
+  exclude:
+    - ./**
+  include:
+    - ./bin/**
+  individually: true
+
+functions:
+  blogBackend:
+    runtime: go1.x
+    handler: bin/blogbackend/main
+    description: Backend for blog
+    # destinations: 
+    #   onFailure: arn:aws:lambda:${self:provider.region}:${aws:accountId}:function:infrastructure-${self:provider.stage}-handleLambdaErrors
+    memorySize: 128
+    timeout: 10
+    maximumEventAge: 21600
+    maximumRetryAttempts: ${self:custom.${self:provider.stage}.maximumRetryAttempts, 0}
+    reservedConcurrency: 1
+    url: true

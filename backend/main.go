@@ -1,14 +1,26 @@
 package main
 
 import (
+	"context"
 	"net/http"
 
+	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+
+	chiadapter "github.com/awslabs/aws-lambda-go-api-proxy/chi"
 
 	"blog.jonastrogen.se/server"
 	"blog.jonastrogen.se/services"
 )
+
+var chiLambda *chiadapter.ChiLambda
+
+// handler is the function called by the lambda.
+func handler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	return chiLambda.ProxyWithContext(ctx, req)
+}
 
 func main() {
 	r := chi.NewRouter()
@@ -33,5 +45,6 @@ func main() {
 	r.MethodFunc("get", "/api/metadata/{blogpost}", h.HandleGetMetadata)
 	r.MethodFunc("get", "/api/metadata", h.HandleListMetadata)
 
-	http.ListenAndServe(":3000", r)
+	// start the lambda with a context
+	lambda.StartWithOptions(handler, lambda.WithContext(context.TODO()))
 }

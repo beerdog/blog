@@ -2,9 +2,11 @@ package server
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 
+	"blog.jonastrogen.se/models"
 	"blog.jonastrogen.se/services"
 )
 
@@ -51,6 +53,17 @@ func (h *BlogPostHandler) HandleListMetadata(w http.ResponseWriter, r *http.Requ
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(err.Error()))
 		return
+	}
+	SendJSONResponse(w, metadata)
+}
+
+func (h *BlogPostHandler) HandleTest(w http.ResponseWriter, r *http.Request) {
+	metadata := models.Metadata{
+		Title:       "Test",
+		Preamble:    "Lorem ipsum dolaret",
+		PublishDate: models.NewDate(time.Now()),
+		Category:    "Software",
+		Tags:        []string{"aws", "lambda", "go", "webhook", "serverless"},
 	}
 	SendJSONResponse(w, metadata)
 }

@@ -8,3 +8,5 @@ backend/.serverless/serverless-state.json
 backend/.serverless/cloudformation-template-update-stack.json
 backend/bin/blogbackend/main
 backend/main
+backend/tmp/build-errors.log
+backend/main

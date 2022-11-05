@@ -2,7 +2,7 @@
 
 build:
 	export GO111MODULE=on
-	env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w -X 'main.Stage=serverless'" -o bin/blogbackend/main main.go
+	env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w -X 'main.Environment=serverless'" -o bin/blogbackend/main main.go
 
 clean:
 	rm -rf ./bin ./vendor Gopkg.lock

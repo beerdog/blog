@@ -4,6 +4,18 @@ frameworkVersion: "3"
 
 provider:
   name: aws
+  iam:
+    role:
+      statements:
+        - Effect: 'Allow'
+          Action:
+            - s3:GetObject
+            - s3:ListBucket
+          Resource: arn:aws:s3:::${self:custom.stageVars.${self:provider.stage}.s3Bucket}/*
+        - Effect: 'Allow'
+          Action:
+            - s3:ListBucket
+          Resource: arn:aws:s3:::${self:custom.stageVars.${self:provider.stage}.s3Bucket}
   stackTags:
     integration: blog
   tags:
@@ -15,14 +27,17 @@ provider:
   logRetentionInDays: ${self:custom.logRetentionInDays.${self:provider.stage}}
 
 custom:
-  # 'prod' stage specific settings, used for function configuration below
-  dev:
-    appDomain: dev.jonastrogen.se
-    cdnCloudfrontEndpoint: https://TODO.cloudfront.net
-  prod:
-    appDomain: jonastrogen.se
-    cdnCloudfrontEndpoint: https://TODO.cloudfront.net
-    maximumRetryAttempts: 2
+  stageVars:
+    # 'prod' stage specific settings, used for function configuration below
+    dev:
+      appDomain: dev.jonastrogen.se
+      cdnCloudfrontEndpoint: https://TODO.cloudfront.net
+      s3Bucket: trogen
+    prod:
+      appDomain: jonastrogen.se
+      cdnCloudfrontEndpoint: https://TODO.cloudfront.net
+      s3Bucket: trogen
+      maximumRetryAttempts: 2
   logRetentionInDays:
     prod: 14
     dev: 1

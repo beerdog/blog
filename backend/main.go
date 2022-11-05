@@ -9,13 +9,14 @@ import (
 	"blog.jonastrogen.se/services"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+	awsconfig "github.com/aws/aws-sdk-go-v2/config"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
 
 // Is set in makefile when building for serverless deployment.
-var Stage = "local"
+var Environment = "local"
 
 var r *chi.Mux
 
@@ -25,7 +26,7 @@ func Handler(ctx context.Context, req events.LambdaFunctionURLRequest) (events.L
 		return events.LambdaFunctionURLResponse{
 			Headers:    map[string]string{},
 			StatusCode: http.StatusInternalServerError,
-		}, err
+		}, err // FIXME do not expose errors in prod
 	}
 	respWriter := server.NewProxyResponseWriter()
 	r.ServeHTTP(respWriter, httpReq)
@@ -34,14 +35,14 @@ func Handler(ctx context.Context, req events.LambdaFunctionURLRequest) (events.L
 		return events.LambdaFunctionURLResponse{
 			Headers:    map[string]string{},
 			StatusCode: http.StatusInternalServerError,
-		}, err
+		}, err // FIXME do not expose errors in prod
 	}
 
 	return proxyResponse, nil
 }
 
 func main() {
-	if Stage == "local" {
+	if Environment == "local" {
 		http.ListenAndServe(":3000", r)
 	} else {
 		lambda.Start(Handler)
@@ -57,14 +58,25 @@ func init() {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "./templates/index.html")
-	})
 	// r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-	// 	w.Write([]byte("welcome"))
+	// 	http.ServeFile(w, r, "./templates/index.html")
 	// })
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("welcome"))
+	})
 
-	blogpostService := services.BlogpostFileService{}
+	awsConfig, err := awsconfig.LoadDefaultConfig(context.TODO())
+	if err != nil {
+		panic(fmt.Errorf("failed to load default AWS config: %w", err))
+	}
+
+	var blogpostService server.BlogPostService
+	if Environment == "local" {
+		// blogpostService = services.BlogpostFileService{}
+		blogpostService = services.NewBlogpostS3Service("trogen", awsConfig)
+	} else {
+		blogpostService = services.NewBlogpostS3Service("trogen", awsConfig)
+	}
 
 	h := server.NewHandler(blogpostService)
 
@@ -73,5 +85,5 @@ func init() {
 	r.MethodFunc("get", "/api/metadata", h.HandleListMetadata)
 	r.MethodFunc("get", "/api/test", h.HandleTest)
 
-	fmt.Printf("Stage: %s\n", Stage)
+	fmt.Printf("Stage: %s\n", Environment)
 }

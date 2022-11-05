@@ -38,7 +38,7 @@ func (h *BlogPostHandler) HandleGetBlogpost(w http.ResponseWriter, r *http.Reque
 
 func (h *BlogPostHandler) HandleGetMetadata(w http.ResponseWriter, r *http.Request) {
 	blogpost := chi.URLParam(r, "blogpost")
-	metadata, err := h.BlogPostService.GetMetadata("blogposts/" + blogpost + ".json")
+	metadata, err := h.BlogPostService.GetMetadata(r.Context(), "blogposts/"+blogpost+".json")
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(err.Error()))
@@ -48,7 +48,7 @@ func (h *BlogPostHandler) HandleGetMetadata(w http.ResponseWriter, r *http.Reque
 }
 
 func (h *BlogPostHandler) HandleListMetadata(w http.ResponseWriter, r *http.Request) {
-	metadata, err := h.BlogPostService.ListMetadata()
+	metadata, err := h.BlogPostService.ListMetadata(r.Context())
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(err.Error()))

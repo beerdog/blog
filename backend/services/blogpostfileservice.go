@@ -1,9 +1,9 @@
 package services
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -12,7 +12,7 @@ import (
 
 type BlogpostFileService struct{}
 
-func (s BlogpostFileService) GetMetadata(postName string) (*models.Metadata, error) {
+func (s BlogpostFileService) GetMetadata(ctx context.Context, postName string) (*models.Metadata, error) {
 	fileContents, err := os.ReadFile(postName)
 	if err != nil {
 		return nil, err
@@ -28,8 +28,8 @@ func (s BlogpostFileService) GetMetadata(postName string) (*models.Metadata, err
 	return &metadata, nil
 }
 
-func (s BlogpostFileService) ListMetadata() (*[]models.Metadata, error) {
-	files, err := ioutil.ReadDir("blogposts/")
+func (s BlogpostFileService) ListMetadata(ctx context.Context) (*[]models.Metadata, error) {
+	files, err := os.ReadDir("blogposts/")
 	if err != nil {
 		return nil, err
 	}
@@ -38,7 +38,7 @@ func (s BlogpostFileService) ListMetadata() (*[]models.Metadata, error) {
 	metadataList := []models.Metadata{}
 	for _, file := range files {
 		if filepath.Ext(file.Name()) == ".json" {
-			metadata, err := s.GetMetadata("blogposts/" + file.Name())
+			metadata, err := s.GetMetadata(ctx, "blogposts/"+file.Name())
 			if err != nil {
 				return nil, err
 			}

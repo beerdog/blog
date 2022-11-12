@@ -72,10 +72,12 @@ func init() {
 
 	var blogpostService server.BlogPostService
 	if Environment == "local" {
-		// blogpostService = services.BlogpostFileService{}
-		blogpostService = services.NewBlogpostS3Service("trogen", awsConfig)
+		blogpostService = services.BlogpostFileService{}
+		//blogpostService = services.NewBlogpostS3Service("trogen", awsConfig)
+		//blogpostService = services.NewBlogpostDynamoDBService("blogposts", awsConfig)
 	} else {
-		blogpostService = services.NewBlogpostS3Service("trogen", awsConfig)
+		// blogpostService = services.NewBlogpostS3Service("trogen", awsConfig)
+		blogpostService = services.NewBlogpostDynamoDBService("blogposts", awsConfig)
 	}
 
 	h := server.NewHandler(blogpostService)

@@ -24,10 +24,28 @@ func NewBlogpostS3Service(bucket string, cfg aws.Config) *BlogpostS3Service {
 	}
 }
 
+func (s *BlogpostS3Service) GetBlogpost(ctx context.Context, name string) ([]byte, error) {
+	output, err := s.s3Client.GetObject(ctx, &s3.GetObjectInput{
+		Bucket: aws.String(s.bucket),
+		Key:    aws.String("blogposts/" + name + ".md"),
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	s3objectBytes, err := io.ReadAll(output.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	return s3objectBytes, nil
+}
+
 func (s *BlogpostS3Service) GetMetadata(ctx context.Context, key string) (*models.Metadata, error) {
 	output, err := s.s3Client.GetObject(ctx, &s3.GetObjectInput{
 		Bucket: aws.String(s.bucket),
-		Key:    aws.String(key),
+		Key:    aws.String(key + ".json"),
 	})
 
 	if err != nil {

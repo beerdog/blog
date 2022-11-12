@@ -26,7 +26,13 @@ func (h *BlogPostHandler) HandleGet(w http.ResponseWriter, r *http.Request) {
 
 func (h *BlogPostHandler) HandleGetBlogpost(w http.ResponseWriter, r *http.Request) {
 	blogpost := chi.URLParam(r, "blogpost")
-	markdown, err := services.RenderMarkdownFile("blogposts/" + blogpost + ".md")
+	md, err := h.BlogPostService.GetBlogpost(r.Context(), blogpost)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+		return
+	}
+	markdown, err := services.RenderMarkdownFile(md)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(err.Error()))
@@ -38,7 +44,7 @@ func (h *BlogPostHandler) HandleGetBlogpost(w http.ResponseWriter, r *http.Reque
 
 func (h *BlogPostHandler) HandleGetMetadata(w http.ResponseWriter, r *http.Request) {
 	blogpost := chi.URLParam(r, "blogpost")
-	metadata, err := h.BlogPostService.GetMetadata(r.Context(), "blogposts/"+blogpost+".json")
+	metadata, err := h.BlogPostService.GetMetadata(r.Context(), "blogposts/"+blogpost) //+".json")
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(err.Error()))

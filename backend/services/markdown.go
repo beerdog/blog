@@ -2,19 +2,13 @@ package services
 
 import (
 	"bytes"
-	"os"
 
 	"github.com/yuin/goldmark"
 )
 
-func RenderMarkdownFile(file string) (*bytes.Buffer, error) {
-	content, err := os.ReadFile(file)
-	if err != nil {
-		return nil, err
-	}
-
+func RenderMarkdownFile(md []byte) (*bytes.Buffer, error) {
 	var buf bytes.Buffer
-	if err := goldmark.Convert(content, &buf); err != nil {
+	if err := goldmark.Convert(md, &buf); err != nil {
 		return nil, err
 	}
 

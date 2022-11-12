@@ -12,8 +12,16 @@ import (
 
 type BlogpostFileService struct{}
 
-func (s BlogpostFileService) GetMetadata(ctx context.Context, postName string) (*models.Metadata, error) {
-	fileContents, err := os.ReadFile(postName)
+func (s BlogpostFileService) GetBlogpost(ctx context.Context, name string) ([]byte, error) {
+	content, err := os.ReadFile("blogposts/" + name + ".md")
+	if err != nil {
+		return nil, err
+	}
+	return content, nil
+}
+
+func (s BlogpostFileService) GetMetadata(ctx context.Context, key string) (*models.Metadata, error) {
+	fileContents, err := os.ReadFile(key + ".json")
 	if err != nil {
 		return nil, err
 	}
@@ -38,7 +46,7 @@ func (s BlogpostFileService) ListMetadata(ctx context.Context) (*[]models.Metada
 	metadataList := []models.Metadata{}
 	for _, file := range files {
 		if filepath.Ext(file.Name()) == ".json" {
-			metadata, err := s.GetMetadata(ctx, "blogposts/"+file.Name())
+			metadata, err := s.GetMetadata(ctx, fmt.Sprintf("blogposts/%s", file.Name()))
 			if err != nil {
 				return nil, err
 			}

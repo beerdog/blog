@@ -78,13 +78,13 @@ func (s *BlogpostDynamoDBService) GetMetadata(ctx context.Context, key string) (
 	return &metadata, nil
 }
 
+// WIP fix this
 func (s *BlogpostDynamoDBService) ListMetadata(ctx context.Context) (*[]models.Metadata, error) {
 	files, err := os.ReadDir("blogposts/")
 	if err != nil {
 		return nil, err
 	}
 
-	// WIP fix this
 	metadataList := []models.Metadata{}
 	for _, file := range files {
 		if filepath.Ext(file.Name()) == ".json" {

@@ -42,7 +42,6 @@ func (s BlogpostFileService) ListMetadata(ctx context.Context) (*[]models.Metada
 		return nil, err
 	}
 
-	// WIP fix this
 	metadataList := []models.Metadata{}
 	for _, file := range files {
 		if filepath.Ext(file.Name()) == ".json" {

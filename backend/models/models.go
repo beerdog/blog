@@ -3,6 +3,8 @@ package models
 import (
 	"fmt"
 	"time"
+
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 )
 
 // Date represents a date backed by a time.Time
@@ -31,6 +33,30 @@ func (d Date) MarshalJSON() ([]byte, error) {
 // UnmarshalJSON unmarshals the date from the following format: 2006-01-02
 func (d *Date) UnmarshalJSON(value []byte) error {
 	t, err := time.Parse("\"2006-01-02\"", string(value))
+	if err != nil {
+		return err
+	}
+	*d = Date{t}
+	return nil
+}
+
+func (d *Date) MarshalDynamoDBAttributeValue() (types.AttributeValue, error) {
+	return &types.AttributeValueMemberS{
+		Value: d.Format("2006-01-02"),
+	}, nil
+}
+
+func (d Date) String() string {
+	return d.Format("2006-01-02")
+}
+
+func (d *Date) UnmarshalDynamoDBAttributeValue(av types.AttributeValue) error {
+	avS, ok := av.(*types.AttributeValueMemberS)
+	if !ok {
+		return nil
+	}
+
+	t, err := time.Parse("2006-01-02", avS.Value)
 	if err != nil {
 		return err
 	}

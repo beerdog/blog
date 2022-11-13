@@ -27,7 +27,7 @@ func NewBlogpostDynamoDBService(table string, cfg aws.Config) *BlogpostDynamoDBS
 }
 
 func (s *BlogpostDynamoDBService) GetBlogpost(ctx context.Context, name string) ([]byte, error) {
-	titleAttr, err := attributevalue.Marshal("test")
+	titleAttr, err := attributevalue.Marshal(name)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +50,7 @@ func (s *BlogpostDynamoDBService) GetBlogpost(ctx context.Context, name string) 
 }
 
 func (s *BlogpostDynamoDBService) GetMetadata(ctx context.Context, key string) (*models.Metadata, error) {
-	titleAttr, err := attributevalue.Marshal("test")
+	titleAttr, err := attributevalue.Marshal(key)
 	if err != nil {
 		return nil, err
 	}
@@ -88,7 +88,7 @@ func (s *BlogpostDynamoDBService) ListMetadata(ctx context.Context) (*[]models.M
 	metadataList := []models.Metadata{}
 	for _, file := range files {
 		if filepath.Ext(file.Name()) == ".json" {
-			metadata, err := s.GetMetadata(ctx, fmt.Sprintf("blogposts/%s", file.Name()))
+			metadata, err := s.GetMetadata(ctx, fmt.Sprintf(file.Name()))
 			if err != nil {
 				return nil, err
 			}

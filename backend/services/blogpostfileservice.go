@@ -20,8 +20,8 @@ func (s BlogpostFileService) GetBlogpost(ctx context.Context, name string) ([]by
 	return content, nil
 }
 
-func (s BlogpostFileService) GetMetadata(ctx context.Context, key string) (*models.Metadata, error) {
-	fileContents, err := os.ReadFile(key + ".json")
+func (s BlogpostFileService) getMetadataByKey(ctx context.Context, key string) (*models.Metadata, error) {
+	fileContents, err := os.ReadFile(key)
 	if err != nil {
 		return nil, err
 	}
@@ -36,6 +36,10 @@ func (s BlogpostFileService) GetMetadata(ctx context.Context, key string) (*mode
 	return &metadata, nil
 }
 
+func (s BlogpostFileService) GetMetadata(ctx context.Context, name string) (*models.Metadata, error) {
+	return s.getMetadataByKey(ctx, "blogposts/"+name+".json")
+}
+
 func (s BlogpostFileService) ListMetadata(ctx context.Context) (*[]models.Metadata, error) {
 	files, err := os.ReadDir("blogposts/")
 	if err != nil {
@@ -45,7 +49,7 @@ func (s BlogpostFileService) ListMetadata(ctx context.Context) (*[]models.Metada
 	metadataList := []models.Metadata{}
 	for _, file := range files {
 		if filepath.Ext(file.Name()) == ".json" {
-			metadata, err := s.GetMetadata(ctx, fmt.Sprintf("blogposts/%s", file.Name()))
+			metadata, err := s.getMetadataByKey(ctx, fmt.Sprintf("blogposts/%s", file.Name()))
 			if err != nil {
 				return nil, err
 			}

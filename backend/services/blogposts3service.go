@@ -42,10 +42,10 @@ func (s *BlogpostS3Service) GetBlogpost(ctx context.Context, name string) ([]byt
 	return s3objectBytes, nil
 }
 
-func (s *BlogpostS3Service) GetMetadata(ctx context.Context, key string) (*models.Metadata, error) {
+func (s *BlogpostS3Service) getMetadataByKey(ctx context.Context, key string) (*models.Metadata, error) {
 	output, err := s.s3Client.GetObject(ctx, &s3.GetObjectInput{
 		Bucket: aws.String(s.bucket),
-		Key:    aws.String(key + ".json"),
+		Key:    aws.String(key),
 	})
 
 	if err != nil {
@@ -67,6 +67,10 @@ func (s *BlogpostS3Service) GetMetadata(ctx context.Context, key string) (*model
 	return &metadata, nil
 }
 
+func (s *BlogpostS3Service) GetMetadata(ctx context.Context, key string) (*models.Metadata, error) {
+	return s.getMetadataByKey(ctx, "blogposts/"+key+".json")
+}
+
 func (s *BlogpostS3Service) ListMetadata(ctx context.Context) (*[]models.Metadata, error) {
 	output, err := s.s3Client.ListObjectsV2(ctx, &s3.ListObjectsV2Input{
 		Bucket: aws.String(s.bucket),
@@ -80,7 +84,7 @@ func (s *BlogpostS3Service) ListMetadata(ctx context.Context) (*[]models.Metadat
 	metadataList := []models.Metadata{}
 	for _, file := range output.Contents {
 		if strings.HasSuffix(*file.Key, ".json") {
-			metadata, err := s.GetMetadata(ctx, *file.Key)
+			metadata, err := s.getMetadataByKey(ctx, *file.Key)
 			if err != nil {
 				return nil, err
 			}

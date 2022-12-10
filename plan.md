@@ -14,4 +14,4 @@
 - Log to cloudwatch
 
 ## Frontend
-- esbuild
+- solidjs

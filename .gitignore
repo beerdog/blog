@@ -11,3 +11,4 @@ backend/main
 backend/tmp/build-errors.log
 backend/main
 tmp/build-errors.log
+frontend/node_modules

@@ -24,7 +24,7 @@ func NewBlogpostS3Service(bucket string, cfg aws.Config) *BlogpostS3Service {
 	}
 }
 
-func (s *BlogpostS3Service) GetBlogpost(ctx context.Context, name string) ([]byte, error) {
+func (s *BlogpostS3Service) GetBlogpost(ctx context.Context, name string) (*models.BlogPost, error) {
 	output, err := s.s3Client.GetObject(ctx, &s3.GetObjectInput{
 		Bucket: aws.String(s.bucket),
 		Key:    aws.String("blogposts/" + name + ".md"),
@@ -39,7 +39,17 @@ func (s *BlogpostS3Service) GetBlogpost(ctx context.Context, name string) ([]byt
 		return nil, err
 	}
 
-	return s3objectBytes, nil
+	metadata, err := s.GetMetadata(ctx, name)
+	if err != nil {
+		return nil, err
+	}
+
+	blogPost := models.BlogPost{
+		Content:  string(s3objectBytes[:]), // TODO suboptimal, should fix serializing dynamodb content to byte[] instead of string.
+		Metadata: *metadata,
+	}
+
+	return &blogPost, nil
 }
 
 func (s *BlogpostS3Service) getMetadataByKey(ctx context.Context, key string) (*models.Metadata, error) {

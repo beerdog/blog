@@ -12,12 +12,23 @@ import (
 
 type BlogpostFileService struct{}
 
-func (s BlogpostFileService) GetBlogpost(ctx context.Context, name string) ([]byte, error) {
+func (s BlogpostFileService) GetBlogpost(ctx context.Context, name string) (*models.BlogPost, error) {
 	content, err := os.ReadFile("blogposts/" + name + ".md")
 	if err != nil {
 		return nil, err
 	}
-	return content, nil
+
+	metadata, err := s.GetMetadata(ctx, name)
+	if err != nil {
+		return nil, err
+	}
+
+	blogPost := models.BlogPost{
+		Content:  string(content[:]), // TODO suboptimal, should fix serializing dynamodb content to byte[] instead of string.
+		Metadata: *metadata,
+	}
+
+	return &blogPost, nil
 }
 
 func (s BlogpostFileService) getMetadataByKey(ctx context.Context, key string) (*models.Metadata, error) {

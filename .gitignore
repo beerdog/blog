@@ -10,3 +10,4 @@ backend/bin/blogbackend/main
 backend/main
 backend/tmp/build-errors.log
 backend/main
+tmp/build-errors.log

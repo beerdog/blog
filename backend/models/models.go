@@ -65,14 +65,15 @@ func (d *Date) UnmarshalDynamoDBAttributeValue(av types.AttributeValue) error {
 }
 
 type BlogPost struct {
-	Content  string   `json:"content"`
-	Metadata Metadata `json:"metadata"`
+	Content string `json:"content"`
+	Metadata
 }
 
 type Metadata struct {
 	Title       string   `json:"title"`
 	Preamble    string   `json:"preamble"`
 	PublishDate Date     `json:"publishDate"`
+	EditDate    Date     `json:"editDate"`
 	Category    string   `json:"category"`
 	Tags        []string `json:"tags"`
 }

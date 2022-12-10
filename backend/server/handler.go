@@ -32,7 +32,7 @@ func (h *BlogPostHandler) HandleGetBlogpost(w http.ResponseWriter, r *http.Reque
 		w.Write([]byte(err.Error()))
 		return
 	}
-	markdown, err := services.RenderMarkdownFile(md)
+	markdown, err := services.RenderMarkdownFile([]byte(md.Content))
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(err.Error()))

@@ -26,7 +26,7 @@ func NewBlogpostDynamoDBService(table string, cfg aws.Config) *BlogpostDynamoDBS
 	}
 }
 
-func (s *BlogpostDynamoDBService) GetBlogpost(ctx context.Context, name string) ([]byte, error) {
+func (s *BlogpostDynamoDBService) GetBlogpost(ctx context.Context, name string) (*models.BlogPost, error) {
 	titleAttr, err := attributevalue.Marshal(name)
 	if err != nil {
 		return nil, err
@@ -45,8 +45,14 @@ func (s *BlogpostDynamoDBService) GetBlogpost(ctx context.Context, name string) 
 		return nil, errors.New(msg)
 	}
 
-	// TODO
-	return []byte{}, nil
+	blogpost := models.BlogPost{}
+
+	err = attributevalue.UnmarshalMap(result.Item, &blogpost)
+	if err != nil {
+		return nil, err
+	}
+
+	return &blogpost, nil
 }
 
 func (s *BlogpostDynamoDBService) GetMetadata(ctx context.Context, key string) (*models.Metadata, error) {

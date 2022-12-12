@@ -1,17 +1,18 @@
+import { Route, Routes } from 'solid-app-router';
 import type { Component } from 'solid-js';
 
-import logo from './logo.svg';
-import styles from './App.module.css';
+import styles from './App.module.scss';
+import Menu from './Menu';
 
 const App: Component = () => {
   return (
-    <div class={styles.App}>
-      <header class={styles.header}>
-        <img src={logo} class={styles.logo} alt="logo" />
-        <p>
-          Hello you
-        </p>
-      </header>
+
+    <div class={`container-lg ${styles.App}`}>
+      <Menu />
+      <Routes>
+        <Route path='/' element={<div>root</div>}   />
+        <Route path="/:test" element={<div>test</div>} />
+      </Routes>
     </div>
   );
 };

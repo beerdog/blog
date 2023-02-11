@@ -54,6 +54,7 @@ func (h *BlogPostHandler) HandleGetMetadata(w http.ResponseWriter, r *http.Reque
 }
 
 func (h *BlogPostHandler) HandleListMetadata(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
 	metadata, err := h.BlogPostService.ListMetadata(r.Context())
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)

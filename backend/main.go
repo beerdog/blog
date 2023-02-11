@@ -43,7 +43,7 @@ func Handler(ctx context.Context, req events.LambdaFunctionURLRequest) (events.L
 
 func main() {
 	if Environment == "local" {
-		http.ListenAndServe(":3000", r)
+		http.ListenAndServe(":3001", r)
 	} else {
 		lambda.Start(Handler)
 	}
@@ -72,9 +72,9 @@ func init() {
 
 	var blogpostService server.BlogPostService
 	if Environment == "local" {
-		//blogpostService = services.BlogpostFileService{}
+		blogpostService = services.BlogpostFileService{}
 		//blogpostService = services.NewBlogpostS3Service("trogen", awsConfig)
-		blogpostService = services.NewBlogpostDynamoDBService("blogposts", awsConfig)
+		//blogpostService = services.NewBlogpostDynamoDBService("blogposts", awsConfig)
 	} else {
 		// blogpostService = services.NewBlogpostS3Service("trogen", awsConfig)
 		blogpostService = services.NewBlogpostDynamoDBService("blogposts", awsConfig)

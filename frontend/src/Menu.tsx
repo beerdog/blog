@@ -8,8 +8,6 @@ const Menu: Component = () => {
   return (
     
     <div class={styles.Menu}>
-      <Container class="pb-5">test</Container>
-      <a href="#">TEST</a>
       <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
             <Container>
             <Navbar.Brand>

@@ -1,0 +1,8 @@
+{
+    "title": "Easy mistake with timezones",
+    "preamble": "Using intellisense to find the right function can fool you.",
+    "publishDate": "2023-02-17",
+    "editDate": "2022-02-17",
+    "category": "software",
+    "tags": [".net", "c#"]
+}

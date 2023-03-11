@@ -1,24 +1,24 @@
 import type { Component } from 'solid-js'
 import { Link, useNavigate } from 'solid-app-router'
 import { Container, Nav, Navbar } from "solid-bootstrap"
-import styles from './Menu.module.scss'
+import './Menu.scss'
 
 const Menu: Component = () => {
   const navigate = useNavigate()
   return (
     
-    <div class={styles.Menu}>
-      <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+    <div id="menu">
+      <Navbar collapseOnSelect expand="lg">
             <Container>
             <Navbar.Brand>
             <Link href='/' class="no-underline color-white">
-                Faith
+                Blog
             </Link>            
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">                
                 <Nav>
-                <Nav.Link onclick={()=>{navigate(`/test`)}}>Test</Nav.Link>
+                <Nav.Link onclick={()=>{navigate(`/about`)}}>About</Nav.Link>
                 </Nav>
             </Navbar.Collapse>
             </Container>

@@ -2,5 +2,10 @@
   color: red;
   a {
     font-size: 30px;
+    text-decoration: none;
+    color: #aaa;
+    &:active, &:hover {
+      color: #ccc;
+    }
   }
 }

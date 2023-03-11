@@ -25,6 +25,7 @@ func (h *BlogPostHandler) HandleGet(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *BlogPostHandler) HandleGetBlogpost(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
 	blogpost := chi.URLParam(r, "blogpost")
 	md, err := h.BlogPostService.GetBlogpost(r.Context(), blogpost)
 	if err != nil {
@@ -43,6 +44,7 @@ func (h *BlogPostHandler) HandleGetBlogpost(w http.ResponseWriter, r *http.Reque
 }
 
 func (h *BlogPostHandler) HandleGetMetadata(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
 	blogpost := chi.URLParam(r, "blogpost")
 	metadata, err := h.BlogPostService.GetMetadata(r.Context(), blogpost)
 	if err != nil {

@@ -76,4 +76,5 @@ type Metadata struct {
 	EditDate    Date     `json:"editDate"`
 	Category    string   `json:"category"`
 	Tags        []string `json:"tags"`
+	Key         string   `json:"key"`
 }

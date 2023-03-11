@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"io"
+	"path/filepath"
 	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -78,7 +79,12 @@ func (s *BlogpostS3Service) getMetadataByKey(ctx context.Context, key string) (*
 }
 
 func (s *BlogpostS3Service) GetMetadata(ctx context.Context, key string) (*models.Metadata, error) {
-	return s.getMetadataByKey(ctx, "blogposts/"+key+".json")
+	metadata, err := s.getMetadataByKey(ctx, "blogposts/"+key+".json")
+	if err != nil {
+		return nil, err
+	}
+	metadata.Key = key
+	return metadata, nil
 }
 
 func (s *BlogpostS3Service) ListMetadata(ctx context.Context) (*[]models.Metadata, error) {
@@ -98,6 +104,8 @@ func (s *BlogpostS3Service) ListMetadata(ctx context.Context) (*[]models.Metadat
 			if err != nil {
 				return nil, err
 			}
+			// Remove prefix and file extension.
+			metadata.Key = strings.TrimPrefix(strings.TrimSuffix(*file.Key, filepath.Ext(*file.Key)), "blogposts/")
 			metadataList = append(metadataList, *metadata)
 		}
 	}

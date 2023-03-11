@@ -3,9 +3,6 @@ package services
 import (
 	"context"
 	"errors"
-	"fmt"
-	"os"
-	"path/filepath"
 
 	"blog.jonastrogen.se/models"
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -81,27 +78,44 @@ func (s *BlogpostDynamoDBService) GetMetadata(ctx context.Context, key string) (
 		return nil, err
 	}
 
+	// FIXME
+	metadata.Key = metadata.Title
+
 	return &metadata, nil
 }
 
 // WIP fix this
 func (s *BlogpostDynamoDBService) ListMetadata(ctx context.Context) (*[]models.Metadata, error) {
-	files, err := os.ReadDir("blogposts/")
+	// FIXME
+	res, err := s.db.Scan(ctx, &dynamodb.ScanInput{
+		TableName: aws.String(s.table),
+		// ExclusiveStartKey:         map[string]types.AttributeValue{},
+		// ExpressionAttributeNames:  map[string]string{},
+		// ExpressionAttributeValues: map[string]types.AttributeValue{},
+		// FilterExpression:          new(string),
+		Limit: aws.Int32(10),
+	})
 	if err != nil {
 		return nil, err
 	}
 
-	metadataList := []models.Metadata{}
-	for _, file := range files {
-		if filepath.Ext(file.Name()) == ".json" {
-			metadata, err := s.GetMetadata(ctx, fmt.Sprintf(file.Name()))
-			if err != nil {
-				return nil, err
-			}
-			metadataList = append(metadataList, *metadata)
-		}
-		fmt.Println(file.Name(), file.IsDir())
+	if res.Items == nil {
+		return nil, errors.New("could not find any items")
 	}
 
-	return &metadataList, err
+	list := make([]models.Metadata, len(res.Items))
+	for i, m := range res.Items {
+		metadata := models.Metadata{}
+
+		err = attributevalue.UnmarshalMap(m, &metadata)
+		if err != nil {
+			return nil, err
+		}
+		// FIXME
+		metadata.Key = metadata.Title
+
+		list[i] = metadata
+	}
+
+	return &list, nil
 }

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"blog.jonastrogen.se/models"
 )
@@ -48,7 +49,12 @@ func (s BlogpostFileService) getMetadataByKey(ctx context.Context, key string) (
 }
 
 func (s BlogpostFileService) GetMetadata(ctx context.Context, name string) (*models.Metadata, error) {
-	return s.getMetadataByKey(ctx, "blogposts/"+name+".json")
+	metadata, err := s.getMetadataByKey(ctx, "blogposts/"+name+".json")
+	if err != nil {
+		return nil, err
+	}
+	metadata.Key = name
+	return metadata, nil
 }
 
 func (s BlogpostFileService) ListMetadata(ctx context.Context) (*[]models.Metadata, error) {
@@ -64,6 +70,7 @@ func (s BlogpostFileService) ListMetadata(ctx context.Context) (*[]models.Metada
 			if err != nil {
 				return nil, err
 			}
+			metadata.Key = strings.TrimSuffix(file.Name(), filepath.Ext(file.Name()))
 			metadataList = append(metadataList, *metadata)
 		}
 		fmt.Println(file.Name(), file.IsDir())

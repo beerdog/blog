@@ -11,6 +11,7 @@ require (
 )
 
 require (
+	github.com/alecthomas/chroma/v2 v2.2.0 // indirect
 	github.com/aws/aws-sdk-go-v2/credentials v1.12.23 // indirect
 	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.12.19 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/ini v1.3.26 // indirect
@@ -19,10 +20,13 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/sso v1.11.25 // indirect
 	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.13.8 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sts v1.17.1 // indirect
+	github.com/dlclark/regexp2 v1.7.0 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
+	github.com/yuin/goldmark-highlighting/v2 v2.0.0-20220924101305-151362477c87 // indirect
 )
 
 require (
+	github.com/alecthomas/chroma v0.10.0
 	github.com/aws/aws-sdk-go v1.44.131
 	github.com/aws/aws-sdk-go-v2 v1.17.1 // indirect
 	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.4.9 // indirect

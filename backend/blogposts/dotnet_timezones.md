@@ -6,7 +6,7 @@ Seems easy enough.
 
 I did not think much of it but let intellisense help me find what I needed, and so, I ended up with the following:
 
-````
+````c#
 TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time");
 var localNow = TimeZoneInfo.ConvertTimeFromUtc(now, tz);
 var nowConvertedBack = localNow.ToUniversalTime();
@@ -30,7 +30,7 @@ Simple enough.
 ---
 
 Invalid code:
-````
+````c#
 public class Program
 {
 	public static void Main()
@@ -49,7 +49,7 @@ public class Program
 ````
 
 Correct code:
-`````
+`````c#
 public static void Main()
 	{
 		var now = DateTime.UtcNow;

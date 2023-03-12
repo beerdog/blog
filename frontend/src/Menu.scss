@@ -1,11 +1,16 @@
 #menu {
   font-family: 'Climate Crisis', cursive;
-    a {
-      color: #8e2510;
-      font-size: 2rem;
-      text-decoration: none;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-right: 2rem;
-    }
+
+  a {
+    color: #8e2510;
+    font-size: 2rem;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-right: 2rem;
+  }
+
+  .container {
+    padding: 0;
+  }
 }

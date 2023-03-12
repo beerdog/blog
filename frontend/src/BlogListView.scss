@@ -3,9 +3,16 @@
   background-color: white;
   padding-left: 0;
 
+  a {
+    font-size: 1.2rem;
+    text-decoration: none;
+    cursor: pointer;
+    &:hover{
+      color: #8e2511;
+    }
+  }
+
   .post {
-    margin-top: 1rem;
-    padding: 1rem;
     .title{
       font-size: 1.4rem;
       font-family: 'Quicksand', sans-serif;
@@ -19,4 +26,8 @@
       font-size: 0.9rem;
     }
   }
+
+  .post + .post {
+    margin-top: 2rem;
+  } 
 }

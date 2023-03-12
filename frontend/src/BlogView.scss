@@ -1,4 +1,28 @@
 #blog-post {
   font-family: 'Nunito', sans-serif;
   font-size: 1rem;
+
+  .back{
+    margin-bottom: 1rem;
+    display: inline-block;
+    color: #8e2511;
+    text-decoration: none;
+    font-size: 0.8rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .date-category {
+    font-size: 0.8rem;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  .preamble {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+  .tags {
+    font-size: 0.8rem;
+    font-family: 'Courier New', Courier, monospace;
+    margin-bottom: 1rem;
+  }
 }
